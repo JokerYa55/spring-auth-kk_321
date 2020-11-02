@@ -51,10 +51,10 @@ public class SecurityConfig extends KeycloakWebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         log.info("configure");
         super.configure(http);
-        http.addFilterAfter(new AuthenticationTokenProcessingFilter(), UsernamePasswordAuthenticationFilter.class)// Добавляем фильтр, который будет чекать каждый запрос
+        http.addFilterAfter(new AuthenticationTokenProcessingFilter(), UsernamePasswordAuthenticationFilter.class)// Добавляем фильтр, который будет чекать каждый запрос                               
                 .authorizeRequests()                
-                .antMatchers("/customers*")
-                .hasRole("user")
+                .antMatchers("/customers*")                
+                .hasRole("users")                
                 .anyRequest()
                 .permitAll();
     }

@@ -3,6 +3,7 @@ package app.controller;
 import java.security.Principal;
 import javax.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
+import org.keycloak.KeycloakPrincipal;
 import org.keycloak.KeycloakSecurityContext;
 import org.keycloak.adapters.RefreshableKeycloakSecurityContext;
 import org.keycloak.adapters.springsecurity.token.KeycloakAuthenticationToken;
@@ -33,9 +34,14 @@ public class RestController {
 
         KeycloakAuthenticationToken token = (KeycloakAuthenticationToken) user;
 
-        RefreshableKeycloakSecurityContext context = (RefreshableKeycloakSecurityContext) request.getAttribute(KeycloakSecurityContext.class.getName());
-        log.info("context = {}", context);
-
+//        RefreshableKeycloakSecurityContext context = (RefreshableKeycloakSecurityContext) request.getAttribute(KeycloakSecurityContext.class.getName());
+//        log.info("context = {}", context);
+//        log.info("principal = {}", principal);
+        request.getSession().invalidate();
+        KeycloakPrincipal< KeycloakSecurityContext> keycloakPrincipal = (KeycloakPrincipal< KeycloakSecurityContext>) token.getPrincipal();
+        KeycloakSecurityContext securityContext = keycloakPrincipal.getKeycloakSecurityContext();
+        log.info("session_state  = {} userid = {}", securityContext.getToken().getSessionState(), securityContext.getIdTokenString());
+        log.info("context = {}", securityContext.getAuthorizationContext());
         log.info("user = {}", token.getAccount().getKeycloakSecurityContext().getToken().getId());
         return "customers";
     }
